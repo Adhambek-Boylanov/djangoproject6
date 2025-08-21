@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: black;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .brand-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .card-img-top {
+            object-fit: cover;
+            height: 250px;
+        }
+        a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">CarShowroom</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'add_car' %}">Add Car</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'add_brand' %}">Add Brand</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Brand Sidebar -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    Brands
+                </div>
+                <ul class="list-group list-group-flush brand-list">
+                    {% for item in brand %}
+                    <li class="list-group-item text-center">
+                        <a href="{% url 'brand_detail' item.pk %}">{{ item.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Car List and Search Form -->
+        <div class="col-md-9">
+            <div class="card mb-4 shadow-sm p-3">
+                <form method="get" class="row g-3">
+                    {{ form.as_p }}
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+
+            {% for item in car %}
+            <div class="card mb-4 shadow-sm">
+                {% if item.photo %}
+                <img src="{{ item.photo.url }}" class="card-img-top" alt="{{ item.name }}">
+                {% else %}
+                <img src="https://picsum.photos/600/250" class="card-img-top" alt="Placeholder">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text"><strong>Brand:</strong> {{ item.brand }}</p>
+                    <p class="card-text"><strong>Created:</strong> {{ item.create_date|date:"d M Y H:i" }}</p>
+                    <a href="{% url 'detail_car' item.pk %}" class="btn btn-outline-primary">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

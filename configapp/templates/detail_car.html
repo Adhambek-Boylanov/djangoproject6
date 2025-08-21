@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ brand.name }}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .brand-header {
+        background-color: #007bff;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .card-img-top {
+        object-fit: cover;
+        height: 250px;
+    }
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .btn-primary {
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="brand-header">
+        <h2>{{ brand.name }}</h2>
+    </div>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                {% if car.photo %}
+                <img src="{{ car.photo.url }}" class="card-img-top" alt="{{ car.name }}">
+                {% else %}
+                <img src="https://picsum.photos/600/250" class="card-img-top" alt="Placeholder">
+                {% endif %}
+
+                <div class="card-body">
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item"><strong>Name:</strong> {{ car.name }}</li>
+                        <li class="list-group-item"><strong>Year:</strong> {{ car.year }}</li>
+                        <li class="list-group-item"><strong>Price:</strong> {{ car.price }} $</li>
+                        <li class="list-group-item"><strong>Create Date:</strong> {{ car.create_date|date:"d M Y H:i" }}</li>
+                        <li class="list-group-item"><p><strong>Website:</strong> <a href="{{ site_url }}" target="_blank">{{ site_url }}</a></p></li>
+                    </ul>
+                      <div class="d-flex align-items-center gap-3">
+                            <a href="{% url 'download_car_pdf' car.pk %}" class="btn btn-primary">
+                                Download PDF
+                            </a>
+                            <div id="qrcode" class="border rounded p-1 bg-white"></div>
+                      </div>
+
+<!-- JS-lar -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  new QRCode(document.getElementById("qrcode"), {
+    text: "{{ site_url }}",
+    width: 110,
+    height: 110,
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
