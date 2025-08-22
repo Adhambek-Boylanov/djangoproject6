@@ -11,16 +11,13 @@
         .navbar-brand {
             font-weight: bold;
         }
-        .card-img-top {
-            object-fit: cover;
-            height: 250px;
-        }
         .brand-list {
             max-height: 500px;
             overflow-y: auto;
         }
-        .card-title h5 {
-            margin-bottom: 0.5rem;
+        .card-img-top {
+            object-fit: cover;
+            height: 250px;
         }
         a {
             text-decoration: none;
@@ -88,6 +85,7 @@
                     <h5 class="card-title">{{ item.name }}</h5>
                     <p class="card-text"><strong>Brand:</strong> {{ item.brand }}</p>
                     <p class="card-text"><strong>Created:</strong> {{ item.create_date|date:"d M Y H:i" }}</p>
+                    <a href="{% url 'detail_car' item.pk %}" class="btn btn-outline-primary">View Details</a>
                 </div>
             </div>
             {% endfor %}

@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render,redirect,get_object_or_404
-from django.contrib.auth.decorators import login_required
 from .forms import BrandForm, CarForm, SearchForm, LoginForm
 from .models import Brand,Car
 from django.http import HttpResponse
@@ -13,6 +13,16 @@ from io import BytesIO
 import os
 import qrcode
 
+def login_reqired_decorator(func):
+    return login_required(func,login_url='login')
+
+@login_reqired_decorator
+def logout_page(request):
+    logout(request)
+    return redirect('login')
+
+
+@login_reqired_decorator
 def index(request):
     brand = Brand.objects.all()
     car = Car.objects.all()
@@ -27,7 +37,7 @@ def info(request):
     car = Car.objects.all()
     form = SearchForm(request.GET or None)
     if form.is_valid():
-        query = form.cleaned_data.get('name')
+        query = form.cleaned_data['name']
         if query:
             car = car.filter(name__icontains=query)
     context = { 'car': car, 'form': form, 'brand': brand, }
@@ -122,7 +132,6 @@ def download_car_pdf(request, pk):
 
 
 
-@login_required(login_url='login')
 
 def login_view(request):
     form = LoginForm(request.POST or None)
