@@ -1,5 +1,8 @@
+from django.contrib.auth import authenticate, login, logout
+
 from django.shortcuts import render,redirect,get_object_or_404
-from .forms import BrandForm,CarForm,SearchForm
+from django.contrib.auth.decorators import login_required
+from .forms import BrandForm, CarForm, SearchForm, LoginForm
 from .models import Brand,Car
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import A4
@@ -9,6 +12,7 @@ from reportlab.lib.utils import ImageReader
 from io import BytesIO
 import os
 import qrcode
+
 def index(request):
     brand = Brand.objects.all()
     car = Car.objects.all()
@@ -114,3 +118,25 @@ def download_car_pdf(request, pk):
     c.showPage()
     c.save()
     return response
+
+
+
+
+@login_required(login_url='login')
+
+def login_view(request):
+    form = LoginForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)  # session ochiladi
+                return redirect("home")   # login bo‘lgandan keyin home page
+            else:
+                form.add_error(None, "Username yoki parol xato!")
+
+    return render(request, "login.html", {"form": form})
+
+
